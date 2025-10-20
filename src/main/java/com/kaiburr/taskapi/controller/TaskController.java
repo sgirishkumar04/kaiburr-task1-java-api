@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -17,29 +18,32 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    // GET tasks (all, by ID, or by name)
     @GetMapping
-    public ResponseEntity<List<Task>> getTasks(
-            @RequestParam(required = false) String id,
-            @RequestParam(required = false) String name) {
-        if (id != null) {
-            Optional<Task> task = taskService.getTaskById(id);
-            return task.map(t -> ResponseEntity.ok(List.of(t)))
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-        } else if (name != null) {
-            List<Task> tasks = taskService.getTasksByName(name);
-            if (tasks.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(tasks);
-        } else {
-            return ResponseEntity.ok(taskService.getAllTasks());
-        }
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(taskService.getAllTasks());
     }
 
-    // PUT a task (create or update)
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable String id) {
+        Optional<Task> task = taskService.getTaskById(id);
+        return task.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Task>> getTasksByName(@PathVariable String name) {
+        List<Task> tasks = taskService.getTasksByName(name);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(tasks);
+    }
+
     @PutMapping
     public ResponseEntity<?> createTask(@RequestBody Task task) {
+        if (task.getId() == null || task.getId().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Task ID cannot be null or empty.");
+        }
         try {
             Task savedTask = taskService.saveOrUpdateTask(task);
             return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
@@ -48,18 +52,17 @@ public class TaskController {
         }
     }
 
-    // DELETE a task
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable String id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
 
-    // PUT to execute a task
-    @PutMapping("/{taskId}/execute")
-    public ResponseEntity<Task> executeTask(@PathVariable String taskId) {
-        Optional<Task> updatedTask = taskService.executeTask(taskId);
-        return updatedTask.map(ResponseEntity::ok)
+    // THIS IS THE CORRECTED METHOD
+    @PutMapping("/{id}/execute")
+    public ResponseEntity<Task> executeTask(@PathVariable String id) {
+        Optional<Task> updatedTaskOptional = taskService.executeTask(id);
+        return updatedTaskOptional.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
