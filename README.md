@@ -74,22 +74,22 @@ The following screenshots provide visual proof of the API's functionality, from 
 This screenshot shows the `PUT /tasks` command to create a new task, followed by a `GET /tasks` command to show it has been successfully saved.
 
 <!-- IMPORTANT: REPLACE 'link-to-your-screenshot-1.png' WITH THE ACTUAL LINK TO YOUR IMAGE -->
-![Create and Get Task](link-to-your-screenshot-1.png)
+![Create and Get Task](create-and-get-task.png)
 
 ### 2. Executing a Task
 This screenshot shows the call to the `PUT /tasks/{taskId}/execute` endpoint.
 
 <!-- IMPORTANT: REPLACE 'link-to-your-screenshot-2.png' WITH THE ACTUAL LINK TO YOUR IMAGE -->
-![Executing Task](link-to-your-screenshot-2.png)
+![Executing Task](execute-task.png)
 
 ### 3. Verifying Task Execution Result
 After execution, this screenshot shows a final `GET /tasks` request where the `taskExecutions` array is now populated with the command output, start time, and end time.
 
 <!-- IMPORTANT: REPLACE 'link-to-your-screenshot-3.png' WITH THE ACTUAL LINK TO YOUR IMAGE -->
-![Verifying Execution Result](link-to-your-screenshot-3.png)
+![Verifying Execution Result](verify-execution-result.png)
 
 ### 4. Proof of Persistence in MongoDB
 This screenshot from MongoDB Compass (or a similar client) shows the task document stored in the `kaiburr_task1` database, confirming data persistence.
 
 <!-- IMPORTANT: REPLACE 'link-to-your-screenshot-4.png' WITH THE ACTUAL LINK TO YOUR IMAGE -->
-![MongoDB Data](link-to-your-screenshot-4.png)
+![MongoDB Data](mongodb-proof.png)
